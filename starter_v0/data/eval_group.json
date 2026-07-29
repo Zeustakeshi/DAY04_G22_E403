@@ -1,102 +1,254 @@
 {
-  "dataset_id": "day04_v2_group_case",
-  "dataset_role": "group",
-  "description": "10 case do nhóm tự viết: 5 single-turn + 5 multi-turn, tập trung vào 4 tool mới (web_search, paper_search, summarize, keyword_extract) và pipeline research -> tổng hợp -> gửi Telegram.",
-  "allowed_failure_types": [
-    "wrong_tool",
-    "wrong_arg_value",
-    "wrong_boundary",
-    "unnecessary_tool",
-    "out_of_scope",
-    "missing_info"
-  ],
-  "cases": [
-    {
-      "id": "G01_web_search_routing",
-      "phase": "B",
-      "query": "Tìm trên web giúp mình thông tin về giá vé máy bay Tết 2026.",
-      "failure_type": "wrong_tool",
-      "expect": {
-        "tool_calls": [
-          {
-            "name": "web_search",
-            "args": {
-              "query": "giá vé máy bay Tết 2026"
+    "dataset_id": "day04_v2_group_case",
+    "dataset_role": "group",
+    "description": "10 case do nhóm tự viết: 5 single-turn + 5 multi-turn, tập trung vào 4 tool mới (web_search, paper_search, summarize, keyword_extract) và pipeline research -> tổng hợp -> gửi Telegram.",
+    "allowed_failure_types": [
+        "wrong_tool",
+        "wrong_arg_value",
+        "wrong_boundary",
+        "unnecessary_tool",
+        "out_of_scope",
+        "missing_info"
+    ],
+    "cases": [
+        {
+            "id": "G01_web_search_routing",
+            "phase": "B",
+            "query": "Tìm trên web giúp mình thông tin về giá vé máy bay Tết 2026.",
+            "failure_type": "wrong_tool",
+            "expect": {
+                "tool_calls": [
+                    {
+                        "name": "web_search",
+                        "args": {
+                            "query": "giá vé máy bay Tết 2026"
+                        }
+                    }
+                ]
+            },
+            "metadata": {
+                "what_it_tests": "Tìm kiếm chung trên web, chưa có URL cụ thể → phải route sang web_search, không phải lookup hay fetch."
             }
-          }
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Tìm kiếm chung trên web, chưa có URL cụ thể → phải route sang web_search, không phải lookup hay fetch."
-      }
-    },
-    {
-      "id": "G02_paper_search_routing",
-      "phase": "B",
-      "query": "Tìm giúp mình vài bài báo khoa học về reinforcement learning from human feedback.",
-      "failure_type": "wrong_tool",
-      "expect": {
-        "tool_calls": [
-          {
-            "name": "paper_search",
-            "args": {
-              "query": "reinforcement learning from human feedback"
+        },
+        {
+            "id": "G02_paper_search_routing",
+            "phase": "B",
+            "query": "Tìm giúp mình vài bài báo khoa học về reinforcement learning from human feedback.",
+            "failure_type": "wrong_tool",
+            "expect": {
+                "tool_calls": [
+                    {
+                        "name": "paper_search",
+                        "args": {
+                            "query": "reinforcement learning from human feedback"
+                        }
+                    }
+                ]
+            },
+            "metadata": {
+                "what_it_tests": "Yêu cầu bài báo khoa học → phải route sang paper_search, không phải web_search/lookup."
             }
-          }
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Yêu cầu bài báo khoa học → phải route sang paper_search, không phải web_search/lookup."
-      }
-    },
-    {
-      "id": "G03_summarize_arg_value",
-      "phase": "B",
-      "query": "Tóm tắt đoạn văn bản này thành đúng 2 câu chính: 'OpenAI released GPT-5 today. It brings major improvements in reasoning. The model is also faster than before. Many developers are excited about new API features.'",
-      "failure_type": "wrong_arg_value",
-      "expect": {
-        "tool_calls": [
-          {
-            "name": "summarize",
-            "args": {
-              "max_sentences": 2
+        },
+        {
+            "id": "G03_summarize_arg_value",
+            "phase": "B",
+            "query": "Tóm tắt đoạn văn bản này thành đúng 2 câu chính: 'OpenAI released GPT-5 today. It brings major improvements in reasoning. The model is also faster than before. Many developers are excited about new API features.'",
+            "failure_type": "wrong_arg_value",
+            "expect": {
+                "tool_calls": [
+                    {
+                        "name": "summarize",
+                        "args": {
+                            "max_sentences": 2
+                        }
+                    }
+                ]
+            },
+            "metadata": {
+                "what_it_tests": "'đúng 2 câu chính' → max_sentences phải là 2, không phải giá trị mặc định 3."
             }
-          }
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "'đúng 2 câu chính' → max_sentences phải là 2, không phải giá trị mặc định 3."
-      }
-    },
-    {
-      "id": "G04_keyword_extract_routing",
-      "phase": "B",
-      "query": "Đoạn văn bản này có những từ khóa quan trọng nào: 'OpenAI released GPT-5 today, a major LLM upgrade for AI research.'",
-      "failure_type": "wrong_tool",
-      "expect": {
-        "tool_calls": [
-          {
-            "name": "keyword_extract",
-            "args": {}
-          }
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Hỏi từ khóa quan trọng của một đoạn văn bản có sẵn → keyword_extract, không phải summarize (khác mục đích: từ khóa vs tóm tắt câu)."
-      }
-    },
-    {
-      "id": "G05_out_of_scope_math",
-      "phase": "B",
-      "query": "Giải giúp mình phương trình bậc 2: x^2 - 5x + 6 = 0.",
-      "failure_type": "out_of_scope",
-      "expect": {
-        "no_tool": true,
-        "behavior": "refuse"
-      },
-      "metadata": {
-        "what_it_tests": "Yêu cầu giải toán, ngoài phạm vi research agent → không gọi bất kỳ tool nào, từ chối/định hướng lại."
-      }
-    }
-  ]
+        },
+        {
+            "id": "G04_keyword_extract_routing",
+            "phase": "B",
+            "query": "Đoạn văn bản này có những từ khóa quan trọng nào: 'OpenAI released GPT-5 today, a major LLM upgrade for AI research.'",
+            "failure_type": "wrong_tool",
+            "expect": {
+                "tool_calls": [
+                    {
+                        "name": "keyword_extract",
+                        "args": {}
+                    }
+                ]
+            },
+            "metadata": {
+                "what_it_tests": "Hỏi từ khóa quan trọng của một đoạn văn bản có sẵn → keyword_extract, không phải summarize (khác mục đích: từ khóa vs tóm tắt câu)."
+            }
+        },
+        {
+            "id": "G05_out_of_scope_math",
+            "phase": "B",
+            "query": "Giải giúp mình phương trình bậc 2: x^2 - 5x + 6 = 0.",
+            "failure_type": "out_of_scope",
+            "expect": {
+                "no_tool": true,
+                "behavior": "refuse"
+            },
+            "metadata": {
+                "what_it_tests": "Yêu cầu giải toán, ngoài phạm vi research agent → không gọi bất kỳ tool nào, từ chối/định hướng lại."
+            }
+        },
+        {
+            "id": "G06_multi_fetch_then_summarize",
+            "phase": "B",
+            "turns": [
+                {
+                    "role": "user",
+                    "content": "Đọc giúp mình bài này: https://openai.com/index/gpt-5/"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Mình đã đọc xong nội dung bài viết tại đường link đó."
+                },
+                {
+                    "role": "user",
+                    "content": "Giờ tóm tắt lại nội dung đó thành 3 câu chính giúp mình."
+                }
+            ],
+            "failure_type": "wrong_tool",
+            "expect": {
+                "tool_calls": [
+                    {
+                        "name": "summarize",
+                        "args": {
+                            "max_sentences": 3
+                        }
+                    }
+                ]
+            },
+            "metadata": {
+                "what_it_tests": "Sau khi đã fetch xong ở lượt trước, lượt cuối yêu cầu tóm tắt → gọi summarize trên nội dung đã fetch, không fetch lại hay gọi nhầm tool khác."
+            }
+        },
+        {
+            "id": "G07_multi_fetch_then_keyword_extract",
+            "phase": "B",
+            "turns": [
+                {
+                    "role": "user",
+                    "content": "Đọc giúp mình bài viết: https://openai.com/index/gpt-5/"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Mình đã đọc xong nội dung bài viết đó."
+                },
+                {
+                    "role": "user",
+                    "content": "Bài đó có những từ khóa/chủ đề chính nào?"
+                }
+            ],
+            "failure_type": "wrong_tool",
+            "expect": {
+                "tool_calls": [
+                    {
+                        "name": "keyword_extract",
+                        "args": {}
+                    }
+                ]
+            },
+            "metadata": {
+                "what_it_tests": "Sau khi fetch, lượt cuối hỏi từ khóa/chủ đề chính → gọi keyword_extract, không gọi summarize (khác mục đích)."
+            }
+        },
+        {
+            "id": "G08_multi_missing_info_then_paper_search",
+            "phase": "B",
+            "turns": [
+                {
+                    "role": "user",
+                    "content": "Tìm giúp mình vài bài báo khoa học."
+                },
+                {
+                    "role": "assistant",
+                    "content": "Bạn muốn tìm bài báo về chủ đề cụ thể nào ạ?"
+                },
+                {
+                    "role": "user",
+                    "content": "À, về diffusion models trong image generation."
+                }
+            ],
+            "failure_type": "missing_info",
+            "expect": {
+                "tool_calls": [
+                    {
+                        "name": "paper_search",
+                        "args": {
+                            "query": "diffusion models in image generation"
+                        }
+                    }
+                ]
+            },
+            "metadata": {
+                "what_it_tests": "Lượt đầu thiếu chủ đề cụ thể, sau khi người dùng bổ sung ở lượt cuối → mới gọi paper_search với query cụ thể."
+            }
+        },
+        {
+            "id": "G09_multi_confirm_before_send",
+            "phase": "B",
+            "turns": [
+                {
+                    "role": "user",
+                    "content": "Tìm trên web tin tức AI hôm nay, tóm tắt rồi gửi qua Telegram giúp mình."
+                },
+                {
+                    "role": "assistant",
+                    "content": "Mình đã tổng hợp xong bản tóm tắt. Bạn xác nhận gửi bản này qua Telegram chứ?"
+                },
+                {
+                    "role": "user",
+                    "content": "Ok, gửi luôn đi."
+                }
+            ],
+            "failure_type": "wrong_boundary",
+            "expect": {
+                "tool_calls": [
+                    {
+                        "name": "send",
+                        "args": {
+                            "confirmed": true
+                        }
+                    }
+                ]
+            },
+            "metadata": {
+                "what_it_tests": "Chỉ sau khi người dùng xác nhận 'gửi luôn đi' ở lượt cuối mới gọi send với confirmed=true; gọi send trước khi xác nhận là sai boundary."
+            }
+        },
+        {
+            "id": "G10_multi_unnecessary_tool_meta",
+            "phase": "B",
+            "turns": [
+                {
+                    "role": "user",
+                    "content": "Tìm trên web tin tức về AI trong tuần này giúp mình."
+                },
+                {
+                    "role": "assistant",
+                    "content": "Đây là các tin AI nổi bật trong tuần: ... (danh sách tin đã tổng hợp)."
+                },
+                {
+                    "role": "user",
+                    "content": "Bạn có thể tóm tắt và rút từ khóa được cho những loại nội dung gì?"
+                }
+            ],
+            "failure_type": "unnecessary_tool",
+            "expect": {
+                "no_tool": true,
+                "behavior": "answer_without_tool"
+            },
+            "metadata": {
+                "what_it_tests": "Câu hỏi meta về khả năng của agent ở lượt cuối → trả lời trực tiếp, không gọi summarize/keyword_extract một cách thừa thãi."
+            }
+        }
+    ]
 }
