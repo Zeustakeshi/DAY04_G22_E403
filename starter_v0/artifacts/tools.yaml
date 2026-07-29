@@ -116,3 +116,40 @@ tools:
         max_pages: {type: integer, default: 5, description: "Số trang"}
         max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
+
+  # ---------------- Team tools ----------------
+  - name: web_search
+    description: "Tìm kiếm trên web (DuckDuckGo, không cần API key) khi chưa có URL cụ thể. Không dùng khi đã có link (đó là fetch) hoặc khi cần bài báo khoa học (đó là paper_search)."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Từ khóa tìm kiếm"}
+        max_results: {type: integer, default: 5, description: "Số kết quả"}
+      required: [query]
+
+  - name: paper_search
+    description: "Tìm bài báo khoa học trực tiếp trên arXiv (không cần API key). Dùng khi người dùng muốn tài liệu/paper học thuật, không dùng cho tin tức hay web thường."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Từ khóa tìm bài báo"}
+        max_results: {type: integer, default: 5, description: "Số kết quả"}
+      required: [query]
+
+  - name: summarize
+    description: "Tóm tắt trích xuất (extractive) một đoạn văn bản dài (thường là kết quả fetch) thành các câu chính. Dùng sau khi đã fetch/có văn bản dài, trước khi format/send."
+    parameters:
+      type: object
+      properties:
+        text: {type: string, default: "", description: "Văn bản cần tóm tắt"}
+        max_sentences: {type: integer, default: 3, description: "Số câu giữ lại"}
+      required: [text]
+
+  - name: keyword_extract
+    description: "Rút ra các từ khóa quan trọng nhất từ một đoạn văn bản. Dùng khi người dùng hỏi về chủ đề chính/từ khóa/thuật ngữ quan trọng của nội dung đã có."
+    parameters:
+      type: object
+      properties:
+        text: {type: string, default: "", description: "Văn bản cần rút từ khóa"}
+        max_keywords: {type: integer, default: 5, description: "Số từ khóa tối đa"}
+      required: [text]
