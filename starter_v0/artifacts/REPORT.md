@@ -32,7 +32,6 @@ Research agent: Chuyên tìm kiếm thông tin tổng hợp trên web, tài li�
 
 **Link dùng thử (truy cập được trong showdown):**
 
-> Streamlit được khuyến nghị, nhưng nhóm có thể dùng bất kỳ framework nào.
 
 URL: [http://localhost:8000](http://localhost:8000)
 
