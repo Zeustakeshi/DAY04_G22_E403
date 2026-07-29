@@ -146,3 +146,42 @@ tools:
         text: {type: string, default: "", description: "Văn bản cần rút từ khóa"}
         max_keywords: {type: integer, default: 5, description: "Số từ khóa tối đa"}
       required: [text]
+
+  # ---------------- Token Optimization & Advanced Research ----------------
+  - name: smart_compress
+    description: "Nén thông minh văn bản dài dựa trên từ khóa truy vấn nghiên cứu, loại bỏ rác và tiết kiệm từ 60-80% token context window cho LLM."
+    parameters:
+      type: object
+      properties:
+        text: {type: string, description: "Văn bản dài từ fetch/paper_text cần nén"}
+        focus_query: {type: string, default: "", description: "Từ khóa hoặc chủ đề nghiên cứu trọng tâm cần giữ lại"}
+        max_chars: {type: integer, default: 1500, description: "Kích thước ký tự tối đa sau nén"}
+      required: [text]
+
+  - name: evidence_synthesize
+    description: "Hợp nhất, lọc trùng lặp (deduplication) và cô đọng danh sách bài viết/bằng chứng nghiên cứu từ nhiều nguồn trước khi tạo bản tin."
+    parameters:
+      type: object
+      properties:
+        sources:
+          type: array
+          description: "Danh sách các item nguồn (tin tức, web, papers)"
+          items:
+            type: object
+            properties:
+              title: {type: string}
+              url: {type: string}
+              source: {type: string}
+              summary: {type: string}
+        max_items: {type: integer, default: 5, description: "Số mục tối đa sau hợp nhất"}
+      required: [sources]
+
+  - name: token_stats
+    description: "Phân tích và đo lường lượng token, số từ, độ dài văn bản để kiểm soát context window và tư vấn tối ưu hóa."
+    parameters:
+      type: object
+      properties:
+        text: {type: string, description: "Văn bản hoặc dữ liệu JSON cần phân tích lượng token"}
+        detail_level: {type: string, enum: [basic, detailed], default: "basic", description: "Mức độ chi tiết báo cáo"}
+      required: [text]
+

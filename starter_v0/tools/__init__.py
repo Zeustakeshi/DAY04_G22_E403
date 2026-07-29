@@ -21,6 +21,9 @@ from .web_search.tool import ddg_web_search
 from .paper_search.tool import arxiv_paper_search
 from .summarize.tool import summarize_text
 from .keyword_extract.tool import keyword_extract
+from .smart_compress.tool import compress_text
+from .evidence_synthesize.tool import synthesize_evidence
+from .token_stats.tool import analyze_token_usage
 
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
@@ -43,6 +46,9 @@ TOOL_FUNCTIONS = {
     "paper_search": arxiv_paper_search,
     "summarize": summarize_text,
     "keyword_extract": keyword_extract,
+    "smart_compress": compress_text,
+    "evidence_synthesize": synthesize_evidence,
+    "token_stats": analyze_token_usage,
 }
 
 
