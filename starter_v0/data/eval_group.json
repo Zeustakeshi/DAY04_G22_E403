@@ -1,0 +1,102 @@
+{
+  "dataset_id": "day04_v2_group_case",
+  "dataset_role": "group",
+  "description": "10 case do nhóm tự viết: 5 single-turn + 5 multi-turn, tập trung vào 4 tool mới (web_search, paper_search, summarize, keyword_extract) và pipeline research -> tổng hợp -> gửi Telegram.",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_web_search_routing",
+      "phase": "B",
+      "query": "Tìm trên web giúp mình thông tin về giá vé máy bay Tết 2026.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "web_search",
+            "args": {
+              "query": "giá vé máy bay Tết 2026"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Tìm kiếm chung trên web, chưa có URL cụ thể → phải route sang web_search, không phải lookup hay fetch."
+      }
+    },
+    {
+      "id": "G02_paper_search_routing",
+      "phase": "B",
+      "query": "Tìm giúp mình vài bài báo khoa học về reinforcement learning from human feedback.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "paper_search",
+            "args": {
+              "query": "reinforcement learning from human feedback"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Yêu cầu bài báo khoa học → phải route sang paper_search, không phải web_search/lookup."
+      }
+    },
+    {
+      "id": "G03_summarize_arg_value",
+      "phase": "B",
+      "query": "Tóm tắt đoạn văn bản này thành đúng 2 câu chính: 'OpenAI released GPT-5 today. It brings major improvements in reasoning. The model is also faster than before. Many developers are excited about new API features.'",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "summarize",
+            "args": {
+              "max_sentences": 2
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "'đúng 2 câu chính' → max_sentences phải là 2, không phải giá trị mặc định 3."
+      }
+    },
+    {
+      "id": "G04_keyword_extract_routing",
+      "phase": "B",
+      "query": "Đoạn văn bản này có những từ khóa quan trọng nào: 'OpenAI released GPT-5 today, a major LLM upgrade for AI research.'",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "keyword_extract",
+            "args": {}
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Hỏi từ khóa quan trọng của một đoạn văn bản có sẵn → keyword_extract, không phải summarize (khác mục đích: từ khóa vs tóm tắt câu)."
+      }
+    },
+    {
+      "id": "G05_out_of_scope_math",
+      "phase": "B",
+      "query": "Giải giúp mình phương trình bậc 2: x^2 - 5x + 6 = 0.",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "metadata": {
+        "what_it_tests": "Yêu cầu giải toán, ngoài phạm vi research agent → không gọi bất kỳ tool nào, từ chối/định hướng lại."
+      }
+    }
+  ]
+}
