@@ -30,7 +30,7 @@
 
 > 1–2 câu mô tả agent dùng để làm gì.
 
-Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc URL và tổng hợp thành digest."
+Research agent: Chuyên tìm kiếm thông tin tổng hợp trên web, tài liệu học thuật và mạng xã hội, sau đó đọc hiểu URL, tóm tắt nội dung cốt lõi và định dạng thành báo cáo để gửi qua Telegram.
 
 **Link dùng thử (truy cập được trong showdown):**
 
